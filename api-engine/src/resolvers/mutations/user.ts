@@ -1,4 +1,4 @@
-import { AuthPayload, MutationResolvers, Ticket, User } from "../../generated/graphql";
+import { AuthPayload, MutationResolvers, User } from "../../generated/graphql";
 import Context from '../../context';
 import { Prisma } from "@prisma/client";
 import hashPassword from "../../utils/hashPassword";
@@ -6,7 +6,6 @@ import generateToken from "../../utils/generateToken";
 import { GraphQLError } from "graphql";
 import bcrypt from 'bcryptjs';
 import getUserId from "../../utils/getUserId";
-import { PrismaSelect } from "@paljs/plugins";
 
 const userResolvers: MutationResolvers = {
   async createUser(parent, args, { prisma }: Context, info) {
