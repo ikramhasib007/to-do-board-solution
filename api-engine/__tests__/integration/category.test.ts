@@ -79,6 +79,19 @@ describe("MUTATE /category", () => {
     expect(data.updateCategory.title).toBe(variables.data.title);
   })
 
+  test("Should not update a category when provided id is unassociated", async () => {
+    const client = getClient(userOne.token);
+    const variables = {
+      data: {
+        title: `test${categoryOne.data?.title}`
+      },
+      id: casual.uuid
+    }
+    await expect(
+      client.mutate({ mutation: UPDATE_CATEGORY, variables })
+    ).rejects.toThrow();
+  })
+
   test("Should not update a category from unauthorized user", async () => {
     const variables = {
       data: {
