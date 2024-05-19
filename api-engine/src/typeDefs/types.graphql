@@ -27,7 +27,6 @@ type Label {
   id: ID!
   title: String!
   category: Category!
-  isDeleted: Boolean!
   createdAt: Date!
   updatedAt: Date!
 }

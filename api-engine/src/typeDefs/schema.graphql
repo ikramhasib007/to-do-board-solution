@@ -1,6 +1,15 @@
 type Query {
   users(query: String, skip: Int, take: Int, cursor: String): [User!]!
   user(id: ID): User!
+
+  categories(query: String, skip: Int, take: Int, cursor: String): [Category!]!
+  category(id: ID!): Category!
+
+  labels(query: String, skip: Int, take: Int, cursor: String): [Label!]!
+  label(id: ID!): Label!
+
+  tickets(query: String, skip: Int, take: Int, cursor: String): [Ticket!]!
+  ticket(id: ID!): Ticket!
 }
 
 type Mutation {
@@ -8,6 +17,18 @@ type Mutation {
   login(data: LoginUserInput!): AuthPayload!
   updateUser(data: UpdateUserInput!): User!
   deleteUser: User!
+
+  createCategory(data: CreateCategoryInput!): Category!
+  updateCategory(id: ID!, data: UpdateCategoryInput!): Category!
+  deleteCategory(id: ID!): Category!
+
+  createLabel(data: CreateLabelInput!): Label!
+  updateLabel(id: ID!, data: UpdateLabelInput!): Label!
+  deleteLabel(id: ID!): Label!
+
+  createTicket(data: CreateTicketInput!): Ticket!
+  updateTicket(id: ID!, data: UpdateTicketInput!): Ticket!
+  deleteTicket(id: ID!): Ticket!
 }
 
 input CreateUserInput {
@@ -27,4 +48,37 @@ input UpdateUserInput {
   lastName: String
   email: String
   password: String
+}
+
+input CreateCategoryInput {
+  title: String!
+}
+
+input UpdateCategoryInput {
+  title: String!
+}
+
+input CreateLabelInput {
+  title: String!
+  categoryId: String!
+}
+
+input UpdateLabelInput {
+  title: String!
+}
+
+input CreateTicketInput {
+  title: String!
+  description: String!
+  expiryDate: Date!
+  categoryId: String!
+  userId: String!
+}
+
+input UpdateTicketInput {
+  title: String
+  description: String
+  expiryDate: Date
+  categoryId: String
+  userId: String
 }

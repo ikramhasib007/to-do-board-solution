@@ -43,13 +43,28 @@ export const userTwo: UserInput = {
   token: undefined
 }
 
+export const categoryOne: InputPayload<Prisma.CategoryCreateInput, Prisma.CategoryGetPayload<{ include: { labels: true, tickets: true } }>> = {
+  input: {
+    title: casual.title
+  }
+}
+
+export const categoryTwo: InputPayload<Prisma.CategoryCreateInput, Prisma.CategoryGetPayload<{ include: { labels: true, tickets: true } }>> = {
+  input: {
+    title: casual.title
+  }
+}
+
 
 const seedDatabase = async () => {
   // Delete all data
 
   try {
+    const deleteCategories = prisma.category.deleteMany();
     const deleteUsers = prisma.user.deleteMany();
+    
     await prisma.$transaction([
+      deleteCategories,
       deleteUsers
     ]);
 
@@ -59,6 +74,10 @@ const seedDatabase = async () => {
     // Create userTwo & generate auth token
     userTwo.user = await prisma.user.create({ data: userTwo.input });
     userTwo.token = jwt.sign({ userId: userTwo.user.id }, process.env.JWT_SECRET!)
+
+    // Create category
+    categoryOne.data = await prisma.category.create({ data: categoryOne.input, include: { labels: true, tickets: true } })
+    categoryTwo.data = await prisma.category.create({ data: categoryOne.input, include: { labels: true, tickets: true } })
 
   } catch (error) {
     throw new Error("Required to run the database migration. Please run the scripts `pnpm migrate && pnpm migrate:test`")
