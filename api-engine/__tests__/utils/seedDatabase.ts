@@ -69,16 +69,38 @@ export const labelTwo: InputPayload<Prisma.LabelCreateInput, Prisma.LabelGetPayl
   }
 }
 
+export const ticketOne: InputPayload<Prisma.TicketCreateInput, Prisma.TicketGetPayload<{ include: { category: true } }>> = {
+  input: {
+    title: casual.title,
+    description: casual.description,
+    expiryDate: new Date().addDays(4),
+    category: {},
+    user: {}
+  }
+}
+
+export const ticketTwo: InputPayload<Prisma.TicketCreateInput, Prisma.TicketGetPayload<{ include: { category: true } }>> = {
+  input: {
+    title: casual.title,
+    description: casual.description,
+    expiryDate: new Date().addDays(5),
+    category: {},
+    user: {}
+  }
+}
+
 
 const seedDatabase = async () => {
   // Delete all data
 
   try {
+    const deleteTickets = prisma.ticket.deleteMany();
     const deleteLabels = prisma.label.deleteMany();
     const deleteCategories = prisma.category.deleteMany();
     const deleteUsers = prisma.user.deleteMany();
     
     await prisma.$transaction([
+      deleteTickets,
       deleteLabels,
       deleteCategories,
       deleteUsers
@@ -87,6 +109,8 @@ const seedDatabase = async () => {
     // Create userOne & generate auth token
     userOne.user = await prisma.user.create({ data: userOne.input });
     userOne.token = jwt.sign({ userId: userOne.user.id }, process.env.JWT_SECRET!)
+    ticketOne.input.user = { connect: { id: userOne.user.id } }
+    ticketTwo.input.user = { connect: { id: userOne.user.id } }
     // Create userTwo & generate auth token
     userTwo.user = await prisma.user.create({ data: userTwo.input });
     userTwo.token = jwt.sign({ userId: userTwo.user.id }, process.env.JWT_SECRET!)
@@ -95,11 +119,18 @@ const seedDatabase = async () => {
     categoryOne.data = await prisma.category.create({ data: categoryOne.input, include: { labels: true, tickets: true } })
     labelOne.input.category = { connect: { id: categoryOne.data?.id } }
     labelTwo.input.category = { connect: { id: categoryOne.data?.id } }
+    ticketOne.input.category = { connect: { id: categoryOne.data?.id } }
+    ticketTwo.input.category = { connect: { id: categoryOne.data?.id } }
+    
     categoryTwo.data = await prisma.category.create({ data: categoryTwo.input, include: { labels: true, tickets: true } })
 
     // Create Label
     labelOne.data = await prisma.label.create({ data: labelOne.input, include: { category: true } })
     labelTwo.data = await prisma.label.create({ data: labelTwo.input, include: { category: true } })
+
+    // Create Ticket
+    ticketOne.data = await prisma.ticket.create({ data: ticketOne.input, include: { category: true } })
+    ticketTwo.data = await prisma.ticket.create({ data: ticketTwo.input, include: { category: true } })
 
   } catch (error) {
     throw new Error("Required to run the database migration. Please run the scripts `pnpm migrate && pnpm migrate:test`")

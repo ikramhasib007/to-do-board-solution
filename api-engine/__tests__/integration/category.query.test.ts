@@ -12,7 +12,7 @@ const client = getClient();
 
 beforeEach(seedDatabase);
 
-describe("QUERY / category", () => {
+describe("QUERY /category", () => {
   test("Should expose all categories", async () => {
     const client = getClient(userOne.token)
     const { data } = await client.query({ query: GET_CATEGORIES })

@@ -9,7 +9,7 @@ const client = getClient();
 
 beforeEach(seedDatabase);
 
-describe("QUERY / user", () => {
+describe("QUERY /user", () => {
   test("Should expose all users", async () => {
     const client = getClient(userOne.token)
     const { data } = await client.query({ query: GET_USERS })

@@ -8,7 +8,7 @@ type Query {
   labels(categoryId: ID, query: String, skip: Int, take: Int, cursor: String): [Label!]!
   label(id: ID!): Label!
 
-  tickets(query: String, skip: Int, take: Int, cursor: String): [Ticket!]!
+  tickets(categoryId: ID, userId: ID, query: String, skip: Int, take: Int, cursor: String): [Ticket!]!
   ticket(id: ID!): Ticket!
 }
 

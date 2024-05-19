@@ -41,3 +41,15 @@ export const LABEL_FIELDS = gql`
     }
   }
 `
+
+export const TICKET_FIELDS = gql`
+  ${CORE_TICKET_FIELDS}
+  ${CORE_CATEGORY_FIELDS}
+
+  fragment TicketFields on Ticket {
+    ...CoreTicketFields
+    category {
+      ...CoreCategoryFields
+    }
+  }
+`
