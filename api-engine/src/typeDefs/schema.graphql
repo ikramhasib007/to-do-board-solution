@@ -5,7 +5,7 @@ type Query {
   categories(query: String, skip: Int, take: Int, cursor: String): [Category!]!
   category(id: ID!): Category!
 
-  labels(query: String, skip: Int, take: Int, cursor: String): [Label!]!
+  labels(categoryId: ID, query: String, skip: Int, take: Int, cursor: String): [Label!]!
   label(id: ID!): Label!
 
   tickets(query: String, skip: Int, take: Int, cursor: String): [Ticket!]!
