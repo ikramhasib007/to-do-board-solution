@@ -1,5 +1,5 @@
 -- CreateEnum
-CREATE TYPE "TicketStatus" AS ENUM ('PENDING', 'PROCESSING', 'COMPLETED');
+CREATE TYPE "TicketStatus" AS ENUM ('PENDING', 'INPROGRESS', 'COMPLETED');
 
 -- CreateTable
 CREATE TABLE "User" (
@@ -7,7 +7,7 @@ CREATE TABLE "User" (
     "firstName" TEXT NOT NULL,
     "lastName" TEXT NOT NULL,
     "email" TEXT NOT NULL,
-    "password" TEXT,
+    "password" TEXT NOT NULL,
     "lastLogin" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "isDeleted" BOOLEAN NOT NULL DEFAULT false,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -47,7 +47,7 @@ CREATE TABLE "Ticket" (
     "expiryDate" TIMESTAMP(3) NOT NULL,
     "status" "TicketStatus" NOT NULL DEFAULT 'PENDING',
     "categoryId" UUID NOT NULL,
-    "userId" UUID NOT NULL,
+    "userId" UUID,
     "isDeleted" BOOLEAN NOT NULL DEFAULT false,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
@@ -74,4 +74,4 @@ ALTER TABLE "Label" ADD CONSTRAINT "Label_categoryId_fkey" FOREIGN KEY ("categor
 ALTER TABLE "Ticket" ADD CONSTRAINT "Ticket_categoryId_fkey" FOREIGN KEY ("categoryId") REFERENCES "Category"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Ticket" ADD CONSTRAINT "Ticket_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Ticket" ADD CONSTRAINT "Ticket_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE SET NULL ON UPDATE CASCADE;

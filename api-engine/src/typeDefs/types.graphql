@@ -1,0 +1,57 @@
+scalar Date
+
+type User {
+  id: ID!
+  firstName: String!
+  lastName: String!
+  email: String!
+  password: String!
+  tickets: [Ticket!]!
+  lastLogin: Date!
+  isDeleted: Boolean!
+  createdAt: Date!
+  updatedAt: Date!
+}
+
+type Category {
+  id: ID!
+  title: String!
+  labels: [Label!]!
+  tickets: [Ticket!]!
+  isDeleted: Boolean!
+  createdAt: Date!
+  updatedAt: Date!
+}
+
+type Label {
+  id: ID!
+  title: String!
+  category: Category!
+  isDeleted: Boolean!
+  createdAt: Date!
+  updatedAt: Date!
+}
+
+type Ticket {
+  id: ID!
+  title: String!
+  description: String!
+  expiryDate: Date!
+  status: TicketStatus!
+  category: Category!
+  user: User!
+  isDeleted: Boolean!
+  createdAt: Date!
+  updatedAt: Date!
+}
+
+type AuthPayload {
+  token: String!
+  user: User!
+}
+
+enum TicketStatus {
+  PENDING
+  INPROGRESS
+  COMPLETED
+}

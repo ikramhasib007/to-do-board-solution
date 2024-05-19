@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "Node16",
+    "lib": ["ES2022"],
+    "moduleResolution": "node16",
+    "allowJs": true,
+    "sourceMap": true,
+    "outDir": "dist",
+    "removeComments": true,
+    "esModuleInterop": true,
+    "typeRoots": ["@types", "./node_modules/@types"],
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "noImplicitAny": true,
+    "noImplicitThis": true,
+    "skipLibCheck": true
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist", "prisma", "config", "coverage", ".vscode"]
+}
