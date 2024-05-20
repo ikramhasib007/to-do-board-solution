@@ -9,8 +9,7 @@ pnpm migrate
 ```
 - Make sure you have installed PostgreSQL in your machine at `5432` port
 - Before starting API Engine, you need to create an env file at `config/` location named `dev.env` for development server, `test.env` for test. sample file are given in desired location.
-- I have using [pnpm](https://pnpm.io/) instead of `npm`
-- 
+- I used [pnpm](https://pnpm.io/) instead of `npm`
 
 
 Sample 
