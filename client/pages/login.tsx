@@ -1,8 +1,12 @@
+import type { InferGetServerSidePropsType, GetServerSideProps } from 'next'
 import Layout from "@/components/layout"
 import SigninForm from "@/components/signin/SigninForm"
 import Image from "next/image"
+import { getLoginSession } from '@/lib/auth'
+import { User } from '@/types'
+import Link from 'next/link'
 
-const LoginPage = () => {
+export default function LoginPage(props: InferGetServerSidePropsType<typeof getServerSideProps>) {
   return (
     <Layout>
       <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
@@ -24,9 +28,9 @@ const LoginPage = () => {
 
           <p className="mt-10 text-center text-sm text-gray-500">
             Not a member? Please{' '}
-            <a href="#" className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500">
+            <Link href="/signup" className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500">
               sign up
-            </a>
+            </Link>
           </p>
         </div>
       </div>
@@ -34,4 +38,28 @@ const LoginPage = () => {
   )
 }
 
-export default LoginPage
+type PageProps = {
+  token: string;
+  user: User | null;
+}
+ 
+export const getServerSideProps = (async (ctx) => {
+  const session = await getLoginSession(ctx.req)
+
+  if(session) {
+    return {
+      redirect: {
+        destination: '/',
+        permanent: false,
+      },
+    }
+  }
+
+  return {
+    props: {
+      token: '',
+      user: null
+    },
+  }
+
+}) satisfies GetServerSideProps<PageProps>

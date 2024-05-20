@@ -8,7 +8,7 @@ import { PrismaSelect } from "@paljs/plugins";
 const userQueryResolvers: QueryResolvers = {
   async users(parent, args, { prisma, request }: Context, info) {
     try {
-      const userId = getUserId(request, false)
+      const userId = getUserId(request)
       const select = new PrismaSelect(info).value;
       const opArgs: Prisma.UserFindManyArgs = {
         take: args.take ?? undefined,

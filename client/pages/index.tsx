@@ -3,19 +3,8 @@ import Layout from '@/components/layout'
 import getClient from '../apollo'
 import { GET_USER } from '@/operations/user'
 import { User } from '@/types'
- 
-export const getServerSideProps = (async (ctx) => {
-  const client = getClient()
-  let user = null
-  try {
-    user = await (await client.query({ query: GET_USER })).data.user ?? null
-  } catch (error) {
-    console.log('error: ', error);
-  }
-  // customer = (session && (await client.query({query: ME})).data.customer) ?? null 
-  console.log('user: ', user);
-  return { props: { user } }
-}) satisfies GetServerSideProps<{ user: User }>
+import { getLoginSession } from '@/lib/auth'
+import { removeTokenCookie } from '@/lib/auth/cookies'
  
 export default function IndexPage({
   user,
@@ -59,3 +48,33 @@ export default function IndexPage({
     </Layout>
   )
 }
+
+type PageProps = {
+  token: string;
+  user: User | null;
+}
+
+export const getServerSideProps = (async (ctx) => {
+  const session = await getLoginSession(ctx.req)
+  let user = null
+
+  if(session) {
+    try {
+      const client = getClient(session.token)
+      user = (session && (await client.query({query: GET_USER})).data.user) ?? null 
+    } catch (error) {
+      console.log('error: ', error);
+    }
+  }
+
+  if(!user) {
+    removeTokenCookie(ctx.res)
+  }
+
+  return {
+    props: {
+      token: session ? session.token : '',
+      user
+    }
+  }
+}) satisfies GetServerSideProps<PageProps>

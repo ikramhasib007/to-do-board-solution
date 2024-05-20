@@ -4,7 +4,7 @@ import { MAX_AGE, setTokenCookie, getTokenCookie } from './cookies'
 
 const TOKEN_SECRET: string = process.env.SESSION_TOKEN_SECRET || 'my-session-secret'
 
-export async function setLoginSession(res: NextApiResponse, session: { id: string }) {
+export async function setLoginSession(res: NextApiResponse, session: { token: string }) {
   const createdAt = Date.now()
   // Create a session object with a max age that we can validate later
   const obj = { ...session, createdAt, maxAge: MAX_AGE }
