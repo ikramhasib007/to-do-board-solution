@@ -36,6 +36,7 @@ pnpm dev
 - I have write 60 tests cases for API server
 - API server are developed using `Node.js` and `GraphQL`
 - [yoga-server](https://the-guild.dev/graphql/yoga-server/docs)
+- [prisma](https://www.prisma.io/docs/getting-started) as ORM
 
 Tests API server
 ```
