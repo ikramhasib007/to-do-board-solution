@@ -26,7 +26,7 @@ interface SpinnerProps {
   color?: string;
 }
 
-export function Spinner({ className, color, small }: SpinnerProps) {
+export function Spinner({ className, color = "gray-900", small = false }: SpinnerProps) {
 
   return (
     <span className={classNames(
@@ -36,9 +36,4 @@ export function Spinner({ className, color, small }: SpinnerProps) {
       `border-${color}`
     )}></span>
   )
-}
-
-Spinner.defaultProps = {
-  color: "gray-900",
-  small: false
 }

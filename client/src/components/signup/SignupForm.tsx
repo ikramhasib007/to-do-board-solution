@@ -1,9 +1,13 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useForm, SubmitHandler } from 'react-hook-form'
 import { ExclamationCircleIcon } from '@heroicons/react/24/outline'
 import * as yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup'
 import ButtonSpinner from '../spinners/ButtonSpinner'
+import { useMutation } from '@apollo/client'
+import { CREATE_USER } from '@/operations/user'
+import { useRouter } from 'next/router'
+import { useLogin } from '@/hooks'
 
 const schema = yup.object().shape({
   firstName: yup.string().trim().label('First name').required(),
@@ -32,14 +36,44 @@ function initializeFormData(): SignupFormInputs {
 }
 
 function SignupForm() {
-  const { register, handleSubmit, formState: { errors }, reset, watch } = useForm<SignupFormInputs>({
+  const router = useRouter()
+  const { getLogin } = useLogin()
+  const [isLoading, setIsLoading] = useState<boolean>(false)
+  const { register, handleSubmit, formState: { errors }, reset, watch, setError } = useForm<SignupFormInputs>({
     resolver: yupResolver(schema),
     defaultValues: {
       ...initializeFormData()
     }
   })
+  const [signup, { loading }] = useMutation(CREATE_USER)
 
-  const onSubmit: SubmitHandler<SignupFormInputs> = (data) => console.log(data)
+  const onSubmit: SubmitHandler<SignupFormInputs> = async (data) => {
+    try {
+      if(!loading) {
+        const { errors } = await signup({
+          variables: {
+            data: {
+              firstName: data.firstName,
+              lastName: data.lastName,
+              email: data.email,
+              password: data.password
+            }
+          }
+        })
+        if(!errors) {
+          setIsLoading(true)
+          const statusCode = await getLogin(data.email, data.password)
+          reset({ ...initializeFormData() }, { keepValues: false })
+          setIsLoading(false)
+          if(statusCode === 200) router.replace('/')
+        } else if(errors[0].message.includes("Unique constraint")) {
+          setError('email', { message: 'Email already exists' })
+        }
+      }
+    } catch (error) {
+      console.log('[Login] error: ', error);
+    }
+  }
 
   return (
     <div className="divide-gray-900/10">
@@ -150,10 +184,10 @@ function SignupForm() {
           </button>
           <button
             type="submit"
-            className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-            // disabled={true}
+            className="relative rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+            disabled={loading || isLoading}
           >
-            <ButtonSpinner loading={false} buttonText="Sign up" />
+            <ButtonSpinner loading={loading || isLoading} buttonText="Sign up" />
           </button>
         </div>
       </form>

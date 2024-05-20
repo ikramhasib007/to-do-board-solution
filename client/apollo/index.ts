@@ -1,14 +1,15 @@
+import type { NextConfig } from 'next'
 import getConfig from 'next/config'
 import { ApolloClient, from } from '@apollo/client/core'
 import { YogaLink } from '@graphql-yoga/apollo-link'
 import { onError } from '@apollo/client/link/error'
 import { cache } from '@/stores/cache'
 
-const { publicRuntimeConfig} = getConfig()
+const { publicRuntimeConfig}: NextConfig = getConfig()
 
 const httpLink = (token?: string) =>
   new YogaLink({
-    endpoint: publicRuntimeConfig.API_URL,
+    endpoint: publicRuntimeConfig!.API_URL,
     fetch: (uri, options) => {
       // @ts-expect-error
       options.headers.Authorization = token ? `Bearer ${token}` : ''
