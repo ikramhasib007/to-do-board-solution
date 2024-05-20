@@ -6,7 +6,7 @@ module.exports = {
     clientSchemaDirectives: ["client", "rest"],
     service: {
       name: 'api-engine',
-      url: 'http://localhost:4001/graphql'
+      url: 'http://localhost:5001/graphql'
     },
     includes: ["./src/**/*.{ts,js,tsx}"],
   }
