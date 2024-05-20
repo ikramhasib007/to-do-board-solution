@@ -46,7 +46,7 @@ const userQueryResolvers: QueryResolvers = {
 
   async user(parent, args, { prisma, request }: Context, info) {
     try {
-      const userId = getUserId(request);
+      const userId = getUserId(request, false);
       const select = new PrismaSelect(info).value;
       return (await prisma.user.findUniqueOrThrow({
         where: {
