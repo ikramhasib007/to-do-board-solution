@@ -3,6 +3,9 @@ import { Dialog, DialogPanel } from '@headlessui/react'
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
 import Image from 'next/image'
 import Link from 'next/link'
+import { useApolloClient } from '@apollo/client'
+import { GET_USER } from '@/operations/user'
+import { useRouter } from 'next/router'
 
 const navigation = [
   { name: 'Product', href: '#' },
@@ -12,7 +15,16 @@ const navigation = [
 ]
 
 const Header: React.FC<{}> = (props) => {
+  const router = useRouter()
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const client = useApolloClient()
+  const { user } = client.readQuery({ query: GET_USER })
+
+  function handleLogout(e: React.MouseEvent<HTMLAnchorElement>) {
+    e.preventDefault();
+    localStorage.removeItem('todo-token')
+    router.push('/api/auth/logout')
+  }
 
   return (
     <header className="bg-white">
@@ -47,9 +59,11 @@ const Header: React.FC<{}> = (props) => {
           </button>
         </div>
         <div className="hidden lg:flex">
-          <Link href="/login" className="text-sm font-semibold leading-6 text-gray-900">
+          {!user ? <Link href="/login" className="text-sm font-semibold leading-6 text-gray-900">
             Log in <span aria-hidden="true">&rarr;</span>
-          </Link>
+          </Link> : <a onClick={handleLogout} href="#" className="text-sm font-semibold leading-6 text-gray-900">
+            Logout <span aria-hidden="true">&rarr;</span>
+          </a>}
         </div>
       </nav>
       <Dialog className="lg:hidden" open={mobileMenuOpen} onClose={setMobileMenuOpen}>
@@ -89,9 +103,11 @@ const Header: React.FC<{}> = (props) => {
                 ))}
               </div>
               <div className="py-6">
-                <Link href="/login" className='-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50'>
+                {!user ? <Link href="/login" className='-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50'>
                   Log in
-                </Link>
+                </Link> : <a onClick={handleLogout} href="#" className='-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50'>
+                  Logout
+                </a>}
               </div>
             </div>
           </div>
