@@ -1,11 +1,9 @@
-import type { ReactElement } from "react"
-import type { NextPageWithLayout } from "./_app"
 import Layout from "@/components/layout"
 import Image from "next/image"
 
-const LoginPage: NextPageWithLayout = () => {
+const LoginPage = () => {
   return (
-    <>
+    <Layout>
       <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-sm">
           <Image
@@ -79,14 +77,6 @@ const LoginPage: NextPageWithLayout = () => {
           </p>
         </div>
       </div>
-    </>
-  )
-}
-
-LoginPage.getLayout = function getLayout(page: ReactElement) {
-  return (
-    <Layout>
-      {page}
     </Layout>
   )
 }
