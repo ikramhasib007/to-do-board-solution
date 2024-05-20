@@ -9,6 +9,9 @@ pnpm migrate
 ```
 - Make sure you have installed PostgreSQL in your machine at `5432` port
 - Before starting API Engine, you need to create an env file at `config/` location named `dev.env` for development server, `test.env` for test. sample file are given in desired location.
+- I have using [pnpm](https://pnpm.io/) instead of `npm`
+- 
+
 
 Sample 
 - `config/dev.env`
@@ -33,6 +36,7 @@ pnpm dev
 ```
 - I have write 60 tests cases for API server
 - API server are developed using `Node.js` and `GraphQL`
+- [yoga-server](https://the-guild.dev/graphql/yoga-server/docs)
 
 Tests API server
 ```
@@ -45,7 +49,7 @@ Then go the url at `http://localhost:5001/graphql`
 
 ## Client
 
-Client site development by `Next.js` with `apollo client`
+- Client site development by `Next.js` with [Apollo Client](https://www.apollographql.com/docs/react)
 
 - Before serving the Client site make sure you have created `.env.development.local` for development and `.env.production.local` for production release.
 
@@ -99,4 +103,4 @@ Then go the url at `http://localhost:5000`
 
 Actually, project is not completed yet. But you may check out this for exploring my coding style.
 
-:)
+Thank you :)
