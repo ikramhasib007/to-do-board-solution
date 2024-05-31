@@ -1,10 +1,8 @@
-/// <reference types="node" />
-
 import '../src/utils/date.extensions';
-
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const casual = require("casual")
 import bcrypt from 'bcryptjs'
 import { Prisma, PrismaClient } from '@prisma/client'
-const casual = require("casual")
 const prisma = new PrismaClient();
 
 enum TicketStatus {

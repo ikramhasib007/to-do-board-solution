@@ -1,5 +1,4 @@
-/// <reference types="node" />
-
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const casual = require("casual");
 import "../../src/utils/date.extensions"
 import bcrypt from 'bcryptjs'

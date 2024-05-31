@@ -6,7 +6,7 @@ const httpLink = (token?: string) =>
   new YogaLink({
     endpoint: `http://localhost:${process.env.HTTP_PORT}/graphql`,
     fetch: (uri, options) => {
-      // @ts-expect-error
+      // @ts-expect-error -> header type check skipping
       options.headers.Authorization = token ? `Bearer ${token}` : ''
       return fetch(uri, options)
     },

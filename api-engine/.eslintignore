@@ -1,9 +1,0 @@
-node_modules
-coverage
-
-# Ignore built files
-build
-dist
-
-# Ignore built files
-__tests__
