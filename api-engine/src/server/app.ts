@@ -22,9 +22,7 @@ export const yoga = createYoga({
   },
   schema,
   logging: true,
-  plugins: [
-    useExtendContext(() => ({ prisma })),
-  ],
+  plugins: [useExtendContext(() => ({ prisma }))],
   graphiql: process.env.NODE_ENV !== 'production',
   fetchAPI: createFetch({
     formDataLimits: {

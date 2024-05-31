@@ -1,14 +1,14 @@
-import { GraphQLError } from "graphql";
+import { GraphQLError } from 'graphql';
 import Context from '../../context';
-import { Label, QueryResolvers } from "../../generated/graphql";
-import getUserId from "../../utils/getUserId";
-import { Prisma } from "@prisma/client";
-import { PrismaSelect } from "@paljs/plugins";
+import { Label, QueryResolvers } from '../../generated/graphql';
+import getUserId from '../../utils/getUserId';
+import { Prisma } from '@prisma/client';
+import { PrismaSelect } from '@paljs/plugins';
 
 const labelQueryResolvers: QueryResolvers = {
   async labels(parent, args, { prisma, request }: Context, info) {
     try {
-      const userId = getUserId(request)
+      const userId = getUserId(request);
       const select = new PrismaSelect(info).value;
       const opArgs: Prisma.LabelFindManyArgs = {
         take: args.take ?? undefined,
@@ -16,11 +16,11 @@ const labelQueryResolvers: QueryResolvers = {
         select: {
           ...select.select,
         },
-      }
-      if(typeof args.categoryId === 'string') {
+      };
+      if (typeof args.categoryId === 'string') {
         opArgs.where = {
-          categoryId: args.categoryId
-        }
+          categoryId: args.categoryId,
+        };
       }
       if (typeof args.cursor === 'string') {
         opArgs.cursor = {
@@ -48,12 +48,12 @@ const labelQueryResolvers: QueryResolvers = {
         where: {
           id: args.id,
         },
-        ...select
+        ...select,
       })) as unknown as Label;
     } catch (error: any) {
       throw new GraphQLError(error);
     }
   },
-}
+};
 
 export default labelQueryResolvers;

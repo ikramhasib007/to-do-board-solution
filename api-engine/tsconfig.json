@@ -16,6 +16,13 @@
     "noImplicitThis": true,
     "skipLibCheck": true
   },
-  "include": ["src/**/*", "__tests__/**/*", "babel.config.js", "eslint.config.mjs", "jest.config.ts", "prisma"],
+  "include": [
+    "src/**/*",
+    "__tests__/**/*",
+    "babel.config.js",
+    "eslint.config.mjs",
+    "jest.config.ts",
+    "prisma"
+  ],
   "exclude": ["node_modules", "dist", "config", "coverage", ".vscode"]
 }

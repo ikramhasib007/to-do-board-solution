@@ -1,14 +1,14 @@
-import { GraphQLError } from "graphql";
+import { GraphQLError } from 'graphql';
 import Context from '../../context';
-import { Category, QueryResolvers } from "../../generated/graphql";
-import getUserId from "../../utils/getUserId";
-import { Prisma } from "@prisma/client";
-import { PrismaSelect } from "@paljs/plugins";
+import { Category, QueryResolvers } from '../../generated/graphql';
+import getUserId from '../../utils/getUserId';
+import { Prisma } from '@prisma/client';
+import { PrismaSelect } from '@paljs/plugins';
 
 const categoryQueryResolvers: QueryResolvers = {
   async categories(parent, args, { prisma, request }: Context, info) {
     try {
-      const userId = getUserId(request)
+      const userId = getUserId(request);
       const select = new PrismaSelect(info).value;
       const opArgs: Prisma.CategoryFindManyArgs = {
         take: args.take ?? undefined,
@@ -19,7 +19,7 @@ const categoryQueryResolvers: QueryResolvers = {
         select: {
           ...select.select,
         },
-      }
+      };
       if (typeof args.cursor === 'string') {
         opArgs.cursor = {
           id: args.cursor,
@@ -46,12 +46,12 @@ const categoryQueryResolvers: QueryResolvers = {
         where: {
           id: args.id,
         },
-        ...select
+        ...select,
       })) as unknown as Category;
     } catch (error: any) {
       throw new GraphQLError(error);
     }
   },
-}
+};
 
 export default categoryQueryResolvers;

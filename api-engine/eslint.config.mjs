@@ -4,7 +4,7 @@ import tseslint from 'typescript-eslint';
 
 export default tseslint.config(
   {
-    ignores: ['**/build/**', '**/dist/**', "src/generated/graphql.ts"],
+    ignores: ['**/build/**', '**/dist/**', 'src/generated/graphql.ts'],
   },
   eslint.configs.recommended,
   ...tseslint.configs.recommended,
@@ -25,10 +25,10 @@ export default tseslint.config(
       '@typescript-eslint/no-explicit-any': 'off',
       '@typescript-eslint/ban-types': 'off',
       'no-undef': 'off',
-    }
+    },
   },
   {
     files: ['__tests__/**'],
     ...jestPlugin.configs['flat/recommended'],
-  },
+  }
 );

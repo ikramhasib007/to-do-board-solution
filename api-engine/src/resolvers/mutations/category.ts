@@ -1,9 +1,9 @@
-import { Category, MutationResolvers } from "../../generated/graphql";
+import { Category, MutationResolvers } from '../../generated/graphql';
 import Context from '../../context';
-import { Prisma } from "@prisma/client";
-import { GraphQLError } from "graphql";
-import getUserId from "../../utils/getUserId";
-import { PrismaSelect } from "@paljs/plugins";
+import { Prisma } from '@prisma/client';
+import { GraphQLError } from 'graphql';
+import getUserId from '../../utils/getUserId';
+import { PrismaSelect } from '@paljs/plugins';
 
 const categoryResolvers: MutationResolvers = {
   async createCategory(parent, args, { prisma, request }: Context, info) {
@@ -12,12 +12,12 @@ const categoryResolvers: MutationResolvers = {
       const select = new PrismaSelect(info).value;
       const { title } = args.data;
       const data: Prisma.CategoryCreateInput = {
-        title
+        title,
       };
 
       const category = await prisma.category.create({
         data,
-        ...select
+        ...select,
       });
 
       return category as unknown as Category;
@@ -32,14 +32,14 @@ const categoryResolvers: MutationResolvers = {
       const select = new PrismaSelect(info).value;
       const { title } = args.data;
       const data: Prisma.CategoryUpdateInput = {
-        title
+        title,
       };
       const category = await prisma.category.update({
         where: {
           id: args.id,
         },
         data,
-        ...select
+        ...select,
       });
 
       return category as unknown as Category;
@@ -54,32 +54,32 @@ const categoryResolvers: MutationResolvers = {
       const select = new PrismaSelect(info).value;
       const category = await prisma.category.findFirstOrThrow({
         where: { id: args.id },
-        include: { labels: true, tickets: true }
+        include: { labels: true, tickets: true },
       });
 
       let ticketsDisconnection: any[] = [];
       if (category.tickets?.length) {
-        ticketsDisconnection = category.tickets.map((ticket) => (
+        ticketsDisconnection = category.tickets.map((ticket) =>
           prisma.ticket.update({
             where: { id: ticket.id },
             data: { category: { disconnect: true } },
           })
-        ));
+        );
       }
 
       let labelsDeletion: any[] = [];
       if (category.labels?.length) {
-        labelsDeletion = category.labels.map((label) => (
+        labelsDeletion = category.labels.map((label) =>
           prisma.label.delete({
             where: { id: label.id },
           })
-        ));
+        );
       }
 
       const deleteCategoryOps = prisma.category.update({
         where: { id: args.id },
         data: { isDeleted: true },
-        ...select
+        ...select,
       });
 
       const [categoryData] = await prisma.$transaction([
@@ -92,7 +92,6 @@ const categoryResolvers: MutationResolvers = {
       throw new GraphQLError(error);
     }
   },
-
-}
+};
 
 export default categoryResolvers;

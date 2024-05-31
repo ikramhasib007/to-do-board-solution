@@ -1,9 +1,9 @@
-import { Label, MutationResolvers } from "../../generated/graphql";
+import { Label, MutationResolvers } from '../../generated/graphql';
 import Context from '../../context';
-import { Prisma } from "@prisma/client";
-import { GraphQLError } from "graphql";
-import getUserId from "../../utils/getUserId";
-import { PrismaSelect } from "@paljs/plugins";
+import { Prisma } from '@prisma/client';
+import { GraphQLError } from 'graphql';
+import getUserId from '../../utils/getUserId';
+import { PrismaSelect } from '@paljs/plugins';
 
 const labelResolvers: MutationResolvers = {
   async createLabel(parent, args, { prisma, request }: Context, info) {
@@ -13,12 +13,12 @@ const labelResolvers: MutationResolvers = {
       const { title, categoryId } = args.data;
       const data: Prisma.LabelCreateInput = {
         title,
-        category: { connect: { id: categoryId } }
+        category: { connect: { id: categoryId } },
       };
 
       const label = await prisma.label.create({
         data,
-        ...select
+        ...select,
       });
 
       return label as unknown as Label;
@@ -33,14 +33,14 @@ const labelResolvers: MutationResolvers = {
       const select = new PrismaSelect(info).value;
       const { title } = args.data;
       const data: Prisma.LabelUpdateInput = {
-        title
+        title,
       };
       const label = await prisma.label.update({
         where: {
           id: args.id,
         },
         data,
-        ...select
+        ...select,
       });
 
       return label as unknown as Label;
@@ -57,7 +57,7 @@ const labelResolvers: MutationResolvers = {
 
       const label = await prisma.label.delete({
         where: { id: args.id },
-        ...select
+        ...select,
       });
 
       return label as unknown as Label;
@@ -65,7 +65,6 @@ const labelResolvers: MutationResolvers = {
       throw new GraphQLError(error);
     }
   },
-
-}
+};
 
 export default labelResolvers;

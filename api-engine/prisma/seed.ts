@@ -1,14 +1,14 @@
 import '../src/utils/date.extensions';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const casual = require("casual")
-import bcrypt from 'bcryptjs'
-import { Prisma, PrismaClient } from '@prisma/client'
+const casual = require('casual');
+import bcrypt from 'bcryptjs';
+import { Prisma, PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
 enum TicketStatus {
-  PENDING = "PENDING",
-  INPROGRESS = "INPROGRESS",
-  COMPLETED = "COMPLETED",
+  PENDING = 'PENDING',
+  INPROGRESS = 'INPROGRESS',
+  COMPLETED = 'COMPLETED',
 }
 
 async function main() {
@@ -28,12 +28,11 @@ async function main() {
   ];
 
   const createManyUsers = await prisma.user.createMany({
-    data: usersData
+    data: usersData,
   });
-  
 
   console.log({
-    createManyUsers
+    createManyUsers,
   });
 }
 

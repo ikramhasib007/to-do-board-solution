@@ -1,9 +1,9 @@
-import { Ticket, MutationResolvers } from "../../generated/graphql";
+import { Ticket, MutationResolvers } from '../../generated/graphql';
 import Context from '../../context';
-import { Prisma } from "@prisma/client";
-import { GraphQLError } from "graphql";
-import getUserId from "../../utils/getUserId";
-import { PrismaSelect } from "@paljs/plugins";
+import { Prisma } from '@prisma/client';
+import { GraphQLError } from 'graphql';
+import getUserId from '../../utils/getUserId';
+import { PrismaSelect } from '@paljs/plugins';
 
 const ticketResolvers: MutationResolvers = {
   async createTicket(parent, args, { prisma, request }: Context, info) {
@@ -16,12 +16,12 @@ const ticketResolvers: MutationResolvers = {
         description,
         expiryDate,
         category: { connect: { id: categoryId } },
-        user: { connect: { id: args.data.userId } }
+        user: { connect: { id: args.data.userId } },
       };
 
       const ticket = await prisma.ticket.create({
         data,
-        ...select
+        ...select,
       });
 
       return ticket as unknown as Ticket;
@@ -40,18 +40,18 @@ const ticketResolvers: MutationResolvers = {
         description: description!,
         expiryDate: expiryDate,
       };
-      if(categoryId) {
-        data.category = { connect: { id: categoryId } }
+      if (categoryId) {
+        data.category = { connect: { id: categoryId } };
       }
-      if(args.data.userId) {
-        data.user = { connect: { id: args.data.userId } }
+      if (args.data.userId) {
+        data.user = { connect: { id: args.data.userId } };
       }
       const ticket = await prisma.ticket.update({
         where: {
           id: args.id,
         },
         data,
-        ...select
+        ...select,
       });
 
       return ticket as unknown as Ticket;
@@ -71,17 +71,16 @@ const ticketResolvers: MutationResolvers = {
         data: {
           category: { disconnect: true },
           user: { disconnect: true },
-          isDeleted: true
+          isDeleted: true,
         },
-        ...select
+        ...select,
       });
-      
+
       return ticket as unknown as Ticket;
     } catch (error: any) {
       throw new GraphQLError(error);
     }
   },
-
-}
+};
 
 export default ticketResolvers;

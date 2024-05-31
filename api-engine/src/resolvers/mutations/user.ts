@@ -1,22 +1,19 @@
-import { AuthPayload, MutationResolvers, User } from "../../generated/graphql";
+import { AuthPayload, MutationResolvers, User } from '../../generated/graphql';
 import Context from '../../context';
-import { Prisma } from "@prisma/client";
-import hashPassword from "../../utils/hashPassword";
-import generateToken from "../../utils/generateToken";
-import { GraphQLError } from "graphql";
+import { Prisma } from '@prisma/client';
+import hashPassword from '../../utils/hashPassword';
+import generateToken from '../../utils/generateToken';
+import { GraphQLError } from 'graphql';
 import bcrypt from 'bcryptjs';
-import getUserId from "../../utils/getUserId";
+import getUserId from '../../utils/getUserId';
 
 const userResolvers: MutationResolvers = {
   async createUser(parent, args, { prisma }: Context, info) {
     try {
-      const {
-        firstName,
-        lastName,
-        email,
-        password,
-      } = args.data;
-      const data: Omit<Prisma.UserCreateInput, "password"> & { password?: string } = {
+      const { firstName, lastName, email, password } = args.data;
+      const data: Omit<Prisma.UserCreateInput, 'password'> & {
+        password?: string;
+      } = {
         firstName,
         lastName,
         email,
@@ -43,8 +40,8 @@ const userResolvers: MutationResolvers = {
     try {
       const query: Prisma.UserFindUniqueOrThrowArgs = {
         where: {
-          email
-        }
+          email,
+        },
       };
       const user = await prisma.user.findFirstOrThrow(query);
 
@@ -100,16 +97,16 @@ const userResolvers: MutationResolvers = {
       const userId = getUserId(request);
       const user = await prisma.user.findFirstOrThrow({
         where: { id: userId },
-        include: { tickets: true }
+        include: { tickets: true },
       });
       let disconnection: any[] = [];
       if (user.tickets?.length) {
-        disconnection = user.tickets.map((ticket) => (
+        disconnection = user.tickets.map((ticket) =>
           prisma.ticket.update({
             where: { id: ticket.id },
             data: { user: { disconnect: true } },
           })
-        ));
+        );
       }
 
       const deleteUserOps = prisma.user.update({
@@ -126,7 +123,6 @@ const userResolvers: MutationResolvers = {
       throw new GraphQLError(error);
     }
   },
-
-}
+};
 
 export default userResolvers;
