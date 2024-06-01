@@ -15,7 +15,12 @@
     "prettier": "prettier --config .prettierrc --write .",
     "postinstall": "npm run codegen && npm run generate",
     "test": "env-cmd -f ./config/test.env jest --watchAll --detectOpenHandles --runInBand --testTimeout=12000",
-    "test:e2e": "env-cmd -f ./config/test.env jest e2e --detectOpenHandles --runInBand --testTimeout=12000"
+    "test:e2e": "env-cmd -f ./config/test.env jest e2e --detectOpenHandles --runInBand --testTimeout=12000",
+    "prebuild": "npm run lint",
+    "clean": "rimraf coverage dist tmp",
+    "migrate:deploy": "env-cmd -f ./config/prod.env npx prisma migrate deploy",
+    "build": "npm run clean && cross-env NODE_ENV=production env-cmd -f ./config/prod.env tsc -p tsconfig.release.json",
+    "start": "cross-env NODE_ENV=production env-cmd -f ./config/prod.env node dist/index.js"
   },
   "keywords": [],
   "author": "",

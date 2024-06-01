@@ -5,7 +5,7 @@ import { YogaLink } from '@graphql-yoga/apollo-link'
 import { onError } from '@apollo/client/link/error'
 import { cache } from '@/stores/cache'
 
-const { publicRuntimeConfig}: NextConfig = getConfig()
+const { publicRuntimeConfig }: NextConfig = getConfig()
 
 const httpLink = (token?: string) =>
   new YogaLink({

@@ -2,18 +2,17 @@
 # Ikram Ud Daula
 
 ## API Engine
+- Make sure you have installed PostgreSQL in your machine at `5432` port
+- Before starting API Engine, you need to create an env file at `config/` location named `dev.env` for development server, `test.env` for test. sample file are given in desired location.
+- I used [pnpm](https://pnpm.io/) instead of `npm`
 
 ```
 cd api-engine && pnpm install
 pnpm migrate
 ```
-- Make sure you have installed PostgreSQL in your machine at `5432` port
-- Before starting API Engine, you need to create an env file at `config/` location named `dev.env` for development server, `test.env` for test. sample file are given in desired location.
-- I used [pnpm](https://pnpm.io/) instead of `npm`
-
 
 Sample 
-- `config/dev.env`
+- `config/dev.env` or `config/prod.env` for production
 ```
 HTTP_PORT=5001
 DATABASE_URL="postgresql://postgres:1234@localhost:5432/todo?schema=public"
@@ -100,6 +99,11 @@ pnpm start
 ```
 
 Then go the url at `http://localhost:5000`
+
+- Shorthand commands for once: navigate to the root directory in your terminal and then copy paste below command, then press enter.
+```
+cd api-engine && pnpm install && pnpm migrate && cd ../client && pnpm install && cd .. && pnpm dev
+```
 
 Actually, project is not completed yet. But you may check out this for exploring my coding style.
 

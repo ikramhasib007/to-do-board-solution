@@ -4,7 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "concurrently \"npm run test\" \"npm run dev\""
+    "preinstall": "find . -name \"noexist\" -type d -prune -exec rm -rf '{}' +; pnpm install --ignore-scripts",
+    "dev": "concurrently --names \"api-engine,client\" \"pnpm --prefix api-engine run dev\" \"pnpm --prefix client run dev\"",
+    "build": "concurrently --names \"api-engine,client\" \"pnpm --prefix api-engine run build\" \"pnpm --prefix client run build\"",
+    "start": "concurrently --names \"api-engine,client\" \"pnpm --prefix api-engine run start\" \"pnpm --prefix client run start\""
   },
   "keywords": [],
   "author": "",
