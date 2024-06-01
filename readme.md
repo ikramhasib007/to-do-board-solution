@@ -101,7 +101,7 @@ pnpm start
 Then go the url at `http://localhost:5000`
 
 ## Shorthand
-- Shorthand commands for once: navigate to the root directory in your terminal and then copy paste below command, then press enter.
+Shorthand commands for once: navigate to the root directory in your terminal and then copy paste below command, then press enter.
 ```
 cd api-engine && pnpm install && pnpm migrate && cd ../client && pnpm install && cd .. && pnpm dev
 ```
