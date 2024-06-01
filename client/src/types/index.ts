@@ -51,3 +51,9 @@ export enum TicketStatus {
   Inprogress = 'INPROGRESS',
   Pending = 'PENDING'
 }
+
+export type ToDoSession = {
+  token: string;
+  createdAt: number;
+  maxAge: number;
+}

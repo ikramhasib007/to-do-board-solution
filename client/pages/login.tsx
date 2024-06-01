@@ -1,9 +1,9 @@
 import type { InferGetServerSidePropsType, GetServerSideProps } from 'next'
+import type { User } from '@/types'
 import Layout from "@/components/layout"
 import SigninForm from "@/components/signin/SigninForm"
 import Image from "next/image"
 import { getLoginSession } from '@/lib/auth'
-import { User } from '@/types'
 import Link from 'next/link'
 
 export default function LoginPage(props: InferGetServerSidePropsType<typeof getServerSideProps>) {
