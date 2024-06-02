@@ -22,6 +22,60 @@ const categories = [
     imageUrl:
       'https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=4&w=256&h=256&q=60',
   },
+  {
+    name: 'Jane Cooper',
+    title: 'Regional Paradigm Technician Regional Paradigm Technician Regional Paradigm Technician',
+    role: 'Admin',
+    email: 'janecooper@example.com',
+    telephone: '+1-202-555-0170',
+    imageUrl:
+      'https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=4&w=256&h=256&q=60',
+  },
+  {
+    name: 'Jane Cooper',
+    title: 'Regional Paradigm Technician Regional Paradigm Technician Regional Paradigm Technician',
+    role: 'Admin',
+    email: 'janecooper@example.com',
+    telephone: '+1-202-555-0170',
+    imageUrl:
+      'https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=4&w=256&h=256&q=60',
+  },
+  {
+    name: 'Jane Cooper',
+    title: 'Regional Paradigm Technician Regional Paradigm Technician Regional Paradigm Technician',
+    role: 'Admin',
+    email: 'janecooper@example.com',
+    telephone: '+1-202-555-0170',
+    imageUrl:
+      'https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=4&w=256&h=256&q=60',
+  },
+  {
+    name: 'Jane Cooper',
+    title: 'Regional Paradigm Technician Regional Paradigm Technician Regional Paradigm Technician',
+    role: 'Admin',
+    email: 'janecooper@example.com',
+    telephone: '+1-202-555-0170',
+    imageUrl:
+      'https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=4&w=256&h=256&q=60',
+  },
+  {
+    name: 'Jane Cooper',
+    title: 'Regional Paradigm Technician Regional Paradigm Technician Regional Paradigm Technician',
+    role: 'Admin',
+    email: 'janecooper@example.com',
+    telephone: '+1-202-555-0170',
+    imageUrl:
+      'https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=4&w=256&h=256&q=60',
+  },
+  {
+    name: 'Jane Cooper',
+    title: 'Regional Paradigm Technician Regional Paradigm Technician Regional Paradigm Technician',
+    role: 'Admin',
+    email: 'janecooper@example.com',
+    telephone: '+1-202-555-0170',
+    imageUrl:
+      'https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=4&w=256&h=256&q=60',
+  },
   
 ]
 
@@ -31,7 +85,7 @@ const Categories: FC<CategoriesProps> = () => {
   let [isOpen, setIsOpen] = useState(false)
   
   return (
-    <div className='overflow-auto pb-6'>
+    <div className='flex overflow-auto gap-6 pb-6'>
       <ul role="list" className="mx-[3px] flex flex-row gap-6">
         {categories.map((person, i) => (
           <li key={person.email + i} className="divide-y divide-gray-200 rounded-lg bg-white shadow">
@@ -65,6 +119,8 @@ const Categories: FC<CategoriesProps> = () => {
           </li>
         ))}
       </ul>
+      
+      <AddCategory />
 
       <Modal
         open={isOpen}
