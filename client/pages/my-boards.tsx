@@ -5,12 +5,13 @@ import getClient from "../apollo";
 import { GET_USER } from "@/operations/user";
 import { removeTokenCookie } from "@/lib/auth/cookies";
 import Layout from "@/components/layout";
+import Categories from "@/components/categories";
 
 export default function MyBoardsPage(props: InferGetServerSidePropsType<typeof getServerSideProps>) {
 
   return (
     <Layout>
-      <h1>Hello there!</h1>
+      <Categories />
     </Layout>
   )
 }
