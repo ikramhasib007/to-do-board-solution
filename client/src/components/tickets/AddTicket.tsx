@@ -45,7 +45,7 @@ type AddTicketProps = {
 const AddTicket: FC<AddTicketProps> = ({
   category, onClose
 }) => {
-  const { data: usersData } = useQuery(GET_USERS)
+  const { data: usersData, loading: usersLoading } = useQuery(GET_USERS)
 
   const { register, handleSubmit, formState: { errors }, watch, setValue, reset, clearErrors, setError } = useForm({
     resolver: yupResolver(schema),
@@ -178,26 +178,28 @@ const AddTicket: FC<AddTicketProps> = ({
                     leaveTo="opacity-0"
                   >
                     <ListboxOptions className="absolute right-0 z-10 mt-1 max-h-56 w-52 overflow-auto rounded-lg bg-white py-3 text-base shadow ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
-                      {[{ id: 'idx', firstName: 'Unassigned', value: null }, ...usersData?.users].map((assignee) => (
-                        <ListboxOption
-                          key={assignee.id}
-                          className={({ focus }) =>
-                            classNames(
-                              focus ? 'bg-gray-100' : '',
-                              !focus ? 'bg-white' : '',
-                              'relative cursor-default select-none px-3 py-2'
-                            )
-                          }
-                          value={assignee}
-                        >
-                          <div className="flex items-center">
-                            <UserCircleIcon className="h-5 w-5 flex-shrink-0 text-gray-400" aria-hidden="true" />                            
-                            <span className="ml-3 block truncate font-medium">
-                              {assignee?.value === null ? assignee.firstName : `${assignee.firstName} ${assignee.lastName}`}
-                            </span>
-                          </div>
-                        </ListboxOption>
-                      ))}
+                      {!usersLoading && usersData && <>
+                        {[{ id: 'idx', firstName: 'Unassigned', value: null }, ...usersData?.users].map((assignee) => (
+                          <ListboxOption
+                            key={assignee.id}
+                            className={({ focus }) =>
+                              classNames(
+                                focus ? 'bg-gray-100' : '',
+                                !focus ? 'bg-white' : '',
+                                'relative cursor-default select-none px-3 py-2'
+                              )
+                            }
+                            value={assignee}
+                          >
+                            <div className="flex items-center">
+                              <UserCircleIcon className="h-5 w-5 flex-shrink-0 text-gray-400" aria-hidden="true" />                            
+                              <span className="ml-3 block truncate font-medium">
+                                {assignee?.value === null ? assignee.firstName : `${assignee.firstName} ${assignee.lastName}`}
+                              </span>
+                            </div>
+                          </ListboxOption>
+                        ))}
+                      </>}
                     </ListboxOptions>
                   </Transition>
                 </div>
