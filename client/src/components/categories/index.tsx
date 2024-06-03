@@ -1,12 +1,13 @@
-import { FC, useState } from 'react'
+import { FC, useState, DragEvent } from 'react'
 import AddCategory from './AddCategory'
 import { PlusIcon } from '@heroicons/react/20/solid'
 import Modal from '../modal'
-import { useQuery } from '@apollo/client'
+import { useMutation, useQuery } from '@apollo/client'
 import { GET_CATEGORIES } from '@/operations/category'
 import { Category } from '@/types'
 import AddTicket from '../tickets/AddTicket'
 import TicketList from '../tickets/TicketList'
+import { UPDATE_TICKET } from '@/operations/ticket'
 
 type State = {
   isOpen: boolean;
@@ -20,15 +21,39 @@ const Categories: FC<CategoriesProps> = () => {
   const { data, loading } = useQuery(GET_CATEGORIES, {
     fetchPolicy: 'network-only'
   })
-  
-  console.log('[Categories] data, loading: ', data, loading);
+  // console.log('[Categories] data, loading: ', data, loading);
+  const [mutate, { loading: updateTicketLoading }] = useMutation(UPDATE_TICKET, {
+    refetchQueries: ["GetTickets"]
+  })
+
+  const handleOnDrop = (e: DragEvent, categoryId: string) => {
+    const ticketId = e.dataTransfer.getData('ticketId')
+    if(!updateTicketLoading) {
+      mutate({
+        variables: {
+          id: ticketId,
+          data: {
+            categoryId
+          }
+        }
+      })
+      .catch(err => console.log(err))
+    }
+  }
+
+  const handleOnDragOver = (e: DragEvent) => e.preventDefault()
   
   return (
     <div className='flex overflow-auto gap-6 pb-6'>
       <ul role="list" className="mx-[3px] flex flex-row gap-6">
         {loading && !data && <CategoriesSkeleton />}
         {data?.categories.map((category: Category, i: number) => (
-          <li key={category.title + i} className="divide-y divide-gray-200 rounded-lg bg-white shadow">
+          <li
+            key={category.title + i}
+            className="divide-y divide-gray-200 rounded-lg bg-white shadow"
+            onDrop={(e) => handleOnDrop(e, category.id)}
+            onDragOver={handleOnDragOver}
+          >
             <div className="sm:flex-auto p-4">
               <h4 className="text-base font-semibold leading-6 text-gray-900">{category.title}</h4>
             </div>

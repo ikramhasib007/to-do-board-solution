@@ -1,4 +1,4 @@
-import { FC, useState } from 'react'
+import { FC, useState, DragEvent } from 'react'
 import { useQuery } from '@apollo/client'
 import { UserCircleIcon } from '@heroicons/react/20/solid'
 import { GET_TICKETS } from '@/operations/ticket'
@@ -25,11 +25,14 @@ const TicketList: FC<TicketListProps> = ({
     },
     fetchPolicy: 'network-only'
   })
-
-  console.log('[TicketList] data, loading: ', data, loading);
+  // console.log('[TicketList] data, loading: ', data, loading);
 
   const handleEdit = (ticket: Ticket) => {
     setState(prevState => ({ ...prevState, isOpen: true, ticket }))
+  }
+
+  const handleOnDragStart = (e: DragEvent, ticketId: string) => {
+    e.dataTransfer.setData('ticketId', ticketId)
   }
 
   if(loading) return <TicketLoadingSkeleton />
@@ -39,8 +42,14 @@ const TicketList: FC<TicketListProps> = ({
   return (
     <>
       {data.tickets.map((ticket: Ticket) => (
-        <div key={ticket.id} className="flex w-72 items-center justify-between space-x-4 p-4">
-          <button onClick={() => handleEdit(ticket)} className="group relative flex-1 truncate text-left">
+        <button
+          key={ticket.id}
+          draggable
+          onDragStart={(e) => handleOnDragStart(e, ticket.id)}
+          onClick={() => handleEdit(ticket)}
+          className="flex w-72 items-center justify-between space-x-4 p-4 text-left"
+        >
+          <div className="group relative flex-1 truncate">
             <div className="flex items-center justify-between space-x-3">
               <h3 className="truncate text-sm font-medium text-gray-900 group-hover:text-gray-600">{ticket.title}</h3>
               <span className="inline-flex flex-shrink-0 items-center rounded-full bg-green-50 px-1.5 py-0.5 text-xs font-medium text-green-700 group-hover:text-green-600 ring-1 ring-inset ring-green-600/20">
@@ -49,8 +58,8 @@ const TicketList: FC<TicketListProps> = ({
               </span>
             </div>
             <p className="mt-1 truncate text-sm text-gray-500 group-hover:text-gray-400">{ticket.description}</p>
-          </button>              
-        </div>
+          </div>              
+        </button>
       ))}
 
       <Modal

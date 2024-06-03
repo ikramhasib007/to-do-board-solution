@@ -38,7 +38,7 @@ export const getServerSideProps = (async (ctx) => {
     removeTokenCookie(ctx.res)
     return {
       redirect: {
-        destination: '/',
+        destination: '/login',
         permanent: false,
       },
     }

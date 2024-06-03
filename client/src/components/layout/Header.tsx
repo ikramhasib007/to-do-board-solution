@@ -3,8 +3,8 @@ import { Dialog, DialogPanel } from '@headlessui/react'
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
 import Image from 'next/image'
 import Link from 'next/link'
-import { useApolloClient, useQuery } from '@apollo/client'
-import { GET_USER, GET_USERS } from '@/operations/user'
+import { useApolloClient } from '@apollo/client'
+import { GET_USER } from '@/operations/user'
 
 const navigation = [
   { name: 'My Boards', href: '/my-boards' },
@@ -14,8 +14,6 @@ const Header: React.FC<{}> = (props) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const client = useApolloClient()
   const { user } = client.readQuery({ query: GET_USER })
-  const { data, loading, error } = useQuery(GET_USERS)
-  console.log('data, loading, error: ', data, loading, error);
 
   return (
     <header className="bg-white">
