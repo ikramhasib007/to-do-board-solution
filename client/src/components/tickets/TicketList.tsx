@@ -1,10 +1,11 @@
-import { FC, useState, DragEvent } from 'react'
+import { FC, useState, DragEvent, Profiler } from 'react'
 import { useQuery } from '@apollo/client'
 import { UserCircleIcon } from '@heroicons/react/20/solid'
 import { GET_TICKETS } from '@/operations/ticket'
 import { Category, Ticket } from '@/types'
 import Modal from '../modal'
 import EditTicket from './EditTicket'
+import { onRenderCallback } from '@/utils/onRenderCallback'
 
 type State = {
   isOpen: boolean;
@@ -67,10 +68,12 @@ const TicketList: FC<TicketListProps> = ({
         onClose={() => setState(prevState => ({ ...prevState, isOpen: false }))}
         width="lg"
       >
-        <EditTicket
-          ticket={state.ticket!}
-          onClose={() => setState(prevState => ({ ...prevState, isOpen: false }))}
-        />
+        <Profiler id='EditTicket' onRender={onRenderCallback}>
+          <EditTicket
+            ticket={state.ticket!}
+            onClose={() => setState(prevState => ({ ...prevState, isOpen: false }))}
+          />
+        </Profiler>
       </Modal>
     </>
   )

@@ -1,5 +1,5 @@
 import '../../utils/date.extensions'
-import { FC } from 'react'
+import { FC, useEffect } from 'react'
 import { Label, Listbox, ListboxButton, ListboxOption, ListboxOptions, Transition } from '@headlessui/react'
 import { CalendarIcon, UserCircleIcon } from '@heroicons/react/20/solid'
 import { classNames } from '@/utils'
@@ -11,6 +11,7 @@ import { useMutation, useQuery } from '@apollo/client'
 import { GET_USERS } from '@/operations/user'
 import { GET_TICKETS, UPDATE_TICKET } from '@/operations/ticket'
 import ButtonSpinner from '../spinners/ButtonSpinner'
+import { ticketFormVar } from '@/stores'
 
 const dueDates = [
   { name: 'No due date', value: null },
@@ -52,9 +53,10 @@ type EditTicketProps = {
 const EditTicket: FC<EditTicketProps> = ({
   ticket, onClose
 }) => {
+  const stageFormValues = ticketFormVar()
   const { data: usersData, loading: usersLoading } = useQuery(GET_USERS)
 
-  const { register, handleSubmit, formState: { errors }, watch, setValue, reset, clearErrors, setError } = useForm({
+  const { register, handleSubmit, formState: { errors, isSubmitSuccessful, isDirty }, watch, setValue, reset, clearErrors, setError, getValues } = useForm({
     resolver: yupResolver(schema),
     defaultValues: {
       ...initializeFormData(ticket)
@@ -118,6 +120,26 @@ const EditTicket: FC<EditTicketProps> = ({
 
   const assigned = watch('user')
   const dated = watch('expiryDate')
+
+  useEffect(() => {
+
+    return function cleanup() {
+      if(isDirty && !isSubmitSuccessful) {
+        const formValues = getValues()
+        // @ts-expect-error
+        stageFormValues[ticket.id] = formValues
+        ticketFormVar(stageFormValues)
+      }
+    }
+  })
+
+  useEffect(() => {
+    // @ts-expect-error
+    if(stageFormValues[ticket.id] && !isDirty) {
+      // @ts-expect-error
+      reset(stageFormValues[ticket.id])
+    }
+  }, [ticket, stageFormValues, reset, isDirty])
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="relative">
