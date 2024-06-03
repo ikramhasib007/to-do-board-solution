@@ -17,19 +17,9 @@ export type Category = {
   createdAt: string;
   id: string;
   isDeleted: boolean;
-  labels: Array<Label>;
   tickets: Array<Ticket>;
   title: string;
   updatedAt: string
-};
-
-export type Label = {
-  __typename?: 'Label';
-  category: Category;
-  createdAt: string;
-  id: string;
-  title: string;
-  updatedAt: string;
 };
 
 export type Ticket = {
@@ -44,6 +34,16 @@ export type Ticket = {
   title: string;
   updatedAt: string;
   user: User;
+  labels: Array<Label>;
+};
+
+export type Label = {
+  __typename?: 'Label';
+  ticket: Ticket;
+  createdAt: string;
+  id: string;
+  title: string;
+  updatedAt: string;
 };
 
 export enum TicketStatus {

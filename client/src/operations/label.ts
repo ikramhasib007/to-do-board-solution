@@ -5,13 +5,13 @@ export const GET_LABELS = gql`
   ${LABEL_FIELDS}
 
   query GetLabels(
-    $categoryId: ID
+    $ticketId: ID
     $query: String
     $skip: Int
     $take: Int
     $cursor: String
   ) {
-    labels(categoryId: $categoryId, query: $query, skip: $skip, take: $take, cursor: $cursor) {
+    labels(ticketId: $ticketId, query: $query, skip: $skip, take: $take, cursor: $cursor) {
       ...LabelFields
     }
   }
