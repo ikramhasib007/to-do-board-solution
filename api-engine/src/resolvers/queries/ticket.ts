@@ -20,6 +20,9 @@ const ticketQueryResolvers: QueryResolvers = {
           ...select.select,
         },
       };
+      if(args.categoryId) {
+        opArgs.where!.categoryId = args.categoryId
+      }
       if (typeof args.cursor === 'string') {
         opArgs.cursor = {
           id: args.cursor,

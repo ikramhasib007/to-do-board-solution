@@ -7,8 +7,10 @@ import { useForm } from 'react-hook-form'
 import * as yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { Category } from '@/types'
-import { useApolloClient, useQuery } from '@apollo/client'
-import { GET_USER, GET_USERS } from '@/operations/user'
+import { useMutation, useQuery } from '@apollo/client'
+import { GET_USERS } from '@/operations/user'
+import { CREATE_TICKET, GET_TICKETS } from '@/operations/ticket'
+import ButtonSpinner from '../spinners/ButtonSpinner'
 
 const dueDates = [
   { name: 'No due date', value: null },
@@ -25,33 +27,76 @@ const schema = yup.object().shape({
   user: yup.object().label('User').nullable().required(),
 });
 
+function initializeFormData(category: Category) {
+  return {
+    title: '',
+    description: '',
+    expiryDate: '',
+    category,
+    user: '',
+  }
+}
+
 type AddTicketProps = {
   category: Category;
+  onClose: () => void;
 }
 
 const AddTicket: FC<AddTicketProps> = ({
-  category
+  category, onClose
 }) => {
-  const client = useApolloClient()
-  const { user } = client.readQuery({ query: GET_USER })
-  const { data: usersData, loading: usersLoading } = useQuery(GET_USERS)
-  // console.log('[GET_USERS] usersData, usersLoading: ', usersData, usersLoading);
-  // console.log('[AddTicket] user: ', user, 'category: ', category);
+  const { data: usersData } = useQuery(GET_USERS, {
+    fetchPolicy: 'network-only'
+  })
 
-  const { register, handleSubmit, formState: { errors }, watch, setValue } = useForm({
+  const { register, handleSubmit, formState: { errors }, watch, setValue, reset } = useForm({
     resolver: yupResolver(schema),
     defaultValues: {
-      title: '',
-      description: '',
-      expiryDate: '',
-      category,
-      user: '',
+      ...initializeFormData(category)
+    }
+  })
+
+  const [mutate, { loading }] = useMutation(CREATE_TICKET, {
+    update(cache, { data: { createTicket } }) {
+      const cacheData = cache.readQuery({
+        query: GET_TICKETS,
+        variables: { categoryId: category.id }
+      })
+
+      cache.writeQuery({
+        query: GET_TICKETS,
+        variables: { categoryId: category.id },
+        data: {
+          tickets: [
+            // @ts-expect-error
+            ...cacheData?.tickets,
+            createTicket
+          ]
+        }
+      })
     }
   })
   
   const onSubmit = (data: any) => {
-    console.log('data: ', data);
-
+    const variables = {
+      data: {
+        title: data.title,
+        description: data.description,
+        expiryDate: new Date(data.expiryDate.value).toISOString(),
+        categoryId: data.category.id,
+        userId: data.user.id,
+      }
+    }
+    if(!loading) {
+      mutate({ variables })
+      .then(({ errors }) => {
+        if(!errors) {
+          reset(initializeFormData(category), { keepValues: false })
+          onClose()
+        }
+      })
+      .catch(err => console.log(err))
+    }
   }
 
   const assigned = watch('user')
@@ -214,9 +259,10 @@ const AddTicket: FC<AddTicketProps> = ({
           <div className="flex-shrink-0">
             <button
               type="submit"
-              className="inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+              className="relative inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+              disabled={loading}
             >
-              Create
+              <ButtonSpinner loading={loading} buttonText='Create' />
             </button>
           </div>
         </div>

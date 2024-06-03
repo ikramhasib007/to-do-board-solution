@@ -6,6 +6,7 @@ import { useQuery } from '@apollo/client'
 import { GET_CATEGORIES } from '@/operations/category'
 import { Category } from '@/types'
 import AddTicket from '../tickets/AddTicket'
+import TicketList from '../tickets/TicketList'
 
 type State = {
   isOpen: boolean;
@@ -19,7 +20,8 @@ const Categories: FC<CategoriesProps> = () => {
   const { data, loading } = useQuery(GET_CATEGORIES, {
     fetchPolicy: 'network-only'
   })
-  // console.log('[Categories] data, loading: ', data, loading);
+  
+  console.log('[Categories] data, loading: ', data, loading);
   
   return (
     <div className='flex overflow-auto gap-6 pb-6'>
@@ -30,17 +32,7 @@ const Categories: FC<CategoriesProps> = () => {
             <div className="sm:flex-auto p-4">
               <h4 className="text-base font-semibold leading-6 text-gray-900">{category.title}</h4>
             </div>
-            <div className="flex w-72 items-center justify-between space-x-4 p-4">
-              <div className="group relative flex-1 truncate hover:cursor-pointer">
-                <div className="flex items-center justify-between space-x-3">
-                  <h3 className="truncate text-sm font-medium text-gray-900 group-hover:text-gray-600">Ticket title</h3>
-                  <span className="inline-flex flex-shrink-0 items-center rounded-full bg-green-50 px-1.5 py-0.5 text-xs font-medium text-green-700 group-hover:text-green-600 ring-1 ring-inset ring-green-600/20">
-                    Label
-                  </span>
-                </div>
-                <p className="mt-1 truncate text-sm text-gray-500 group-hover:text-gray-400">Ticket description</p>
-              </div>              
-            </div>
+            <TicketList category={category} />
             <div>
               <div className="-mt-px flex">
                 <div className="flex w-0 flex-1">
@@ -69,7 +61,10 @@ const Categories: FC<CategoriesProps> = () => {
         onAccept={() => setState(prevState => ({ ...prevState, isOpen: false }))}
         width="lg"
       >
-        <AddTicket category={state.category!} />
+        <AddTicket
+          category={state.category!}
+          onClose={() => setState(prevState => ({ ...prevState, isOpen: false }))}
+        />
       </Modal>
 
     </div>

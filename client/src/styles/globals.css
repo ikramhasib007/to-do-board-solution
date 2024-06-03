@@ -1,5 +1,12 @@
 @tailwind base;
 @tailwind components;
+
+@layer components {
+  .border-t-required {
+    @apply border-t border-white !important;
+  }
+}
+
 @tailwind utilities;
 
 :root {
