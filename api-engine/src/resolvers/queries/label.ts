@@ -17,9 +17,9 @@ const labelQueryResolvers: QueryResolvers = {
           ...select.select,
         },
       };
-      if (typeof args.categoryId === 'string') {
+      if (typeof args.ticketId === 'string') {
         opArgs.where = {
-          categoryId: args.categoryId,
+          ticketId: args.ticketId,
         };
       }
       if (typeof args.cursor === 'string') {

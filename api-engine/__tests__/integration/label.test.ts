@@ -2,7 +2,7 @@
 const casual = require("casual");
 import prisma from "../../src/prisma";
 import getClient from "../utils/getClient";
-import seedDatabase, { categoryOne, labelOne, userOne } from "../utils/seedDatabase";
+import seedDatabase, { labelOne, ticketOne, userOne } from "../utils/seedDatabase";
 import { CREATE_LABEL, DELETE_LABEL, UPDATE_LABEL } from "../operations/label";
 
 const client = getClient();
@@ -15,7 +15,7 @@ describe("MUTATE /label", () => {
     const variables = {
       data: {
         title: casual.title,
-        categoryId: categoryOne.data?.id
+        ticketId: ticketOne.data?.id
       },
     };
 
@@ -24,7 +24,7 @@ describe("MUTATE /label", () => {
       variables,
     });
 
-    const labels = await prisma.label.findMany({ where: { categoryId: categoryOne.data?.id } });
+    const labels = await prisma.label.findMany({ where: { ticketId: ticketOne.data?.id } });
     expect(labels.length).toBe(3);
     expect(labels).toEqual(
       expect.arrayContaining([
@@ -37,7 +37,7 @@ describe("MUTATE /label", () => {
     const variables = {
       data: {
         title: casual.title,
-        categoryId: categoryOne.data?.id
+        ticketId: ticketOne.data?.id
       },
     };
     await expect(
@@ -58,7 +58,7 @@ describe("MUTATE /label", () => {
     const variables = {
       data: {
         title: '',
-        categoryId: categoryOne.data?.id
+        ticketId: ticketOne.data?.id
       },
     };
     await expect(
@@ -112,8 +112,17 @@ describe("MUTATE /label", () => {
       mutation: DELETE_LABEL,
       variables: { id: labelOne.data?.id }
     });
-    const labels = await prisma.label.findMany({ where: { categoryId: categoryOne.data?.id } });
+    const labels = await prisma.label.findMany({ where: { ticketId: ticketOne.data?.id } });
     expect(labels.length).toBe(1);
+    const ticket = await prisma.ticket.findFirstOrThrow({ where: { id: ticketOne.data?.id }, include: { labels: true } })
+    expect(ticket.labels.length).toBe(1);
+    expect(ticket.labels).not.toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          id: data.deleteLabel.id
+        })
+      ])
+    )
   })
 
   test("Should not delete a label from unauthorized user", async () => {

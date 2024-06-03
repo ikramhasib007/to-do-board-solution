@@ -22,15 +22,6 @@ export const CORE_CATEGORY_FIELDS = gql`
   }
 `
 
-export const CORE_LABEL_FIELDS = gql`
-  fragment CoreLabelFields on Label {
-    id
-    title
-    createdAt
-    updatedAt
-  }
-`
-
 export const CORE_TICKET_FIELDS = gql`
   fragment CoreTicketFields on Ticket {
     id
@@ -39,6 +30,15 @@ export const CORE_TICKET_FIELDS = gql`
     expiryDate
     status
     isDeleted
+    createdAt
+    updatedAt
+  }
+`
+
+export const CORE_LABEL_FIELDS = gql`
+  fragment CoreLabelFields on Label {
+    id
+    title
     createdAt
     updatedAt
   }

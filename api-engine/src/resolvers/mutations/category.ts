@@ -54,7 +54,7 @@ const categoryResolvers: MutationResolvers = {
       const select = new PrismaSelect(info).value;
       const category = await prisma.category.findFirstOrThrow({
         where: { id: args.id },
-        include: { labels: true, tickets: true },
+        include: { tickets: true },
       });
 
       let ticketsDisconnection: any[] = [];
@@ -63,15 +63,6 @@ const categoryResolvers: MutationResolvers = {
           prisma.ticket.update({
             where: { id: ticket.id },
             data: { category: { disconnect: true } },
-          })
-        );
-      }
-
-      let labelsDeletion: any[] = [];
-      if (category.labels?.length) {
-        labelsDeletion = category.labels.map((label) =>
-          prisma.label.delete({
-            where: { id: label.id },
           })
         );
       }
@@ -85,7 +76,6 @@ const categoryResolvers: MutationResolvers = {
       const [categoryData] = await prisma.$transaction([
         deleteCategoryOps,
         ...ticketsDisconnection,
-        ...labelsDeletion,
       ]);
       return categoryData as Category;
     } catch (error: any) {

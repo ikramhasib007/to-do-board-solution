@@ -10,10 +10,10 @@ const labelResolvers: MutationResolvers = {
     try {
       const userId = getUserId(request);
       const select = new PrismaSelect(info).value;
-      const { title, categoryId } = args.data;
+      const { title, ticketId } = args.data;
       const data: Prisma.LabelCreateInput = {
         title,
-        category: { connect: { id: categoryId } },
+        ticket: { connect: { id: ticketId } },
       };
 
       const label = await prisma.label.create({

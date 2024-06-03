@@ -66,7 +66,21 @@ const ticketResolvers: MutationResolvers = {
       const select = new PrismaSelect(info).value;
       await prisma.ticket.findFirstOrThrow({ where: { id: args.id } });
 
-      const ticket = await prisma.ticket.update({
+      const ticket = await prisma.ticket.findFirstOrThrow({
+        where: { id: args.id },
+        include: { labels: true },
+      });
+
+      let labelsDeletion: any[] = [];
+      if (ticket.labels?.length) {
+        labelsDeletion = ticket.labels.map((label) =>
+          prisma.label.delete({
+            where: { id: label.id },
+          })
+        );
+      }
+
+      const deleteTicketOps = prisma.ticket.update({
         where: { id: args.id },
         data: {
           category: { disconnect: true },
@@ -76,7 +90,12 @@ const ticketResolvers: MutationResolvers = {
         ...select,
       });
 
-      return ticket as unknown as Ticket;
+      const [ticketData] = await prisma.$transaction([
+        deleteTicketOps,
+        ...labelsDeletion,
+      ]);
+
+      return ticketData as unknown as Ticket;
     } catch (error: any) {
       throw new GraphQLError(error);
     }

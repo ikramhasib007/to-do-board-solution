@@ -16,17 +16,8 @@ type User {
 type Category {
   id: ID!
   title: String!
-  labels: [Label!]!
   tickets: [Ticket!]!
   isDeleted: Boolean!
-  createdAt: Date!
-  updatedAt: Date!
-}
-
-type Label {
-  id: ID!
-  title: String!
-  category: Category!
   createdAt: Date!
   updatedAt: Date!
 }
@@ -37,9 +28,18 @@ type Ticket {
   description: String!
   expiryDate: Date!
   status: TicketStatus!
-  category: Category!
-  user: User!
+  category: Category
+  user: User
+  labels: [Label!]!
   isDeleted: Boolean!
+  createdAt: Date!
+  updatedAt: Date!
+}
+
+type Label {
+  id: ID!
+  title: String!
+  ticket: Ticket!
   createdAt: Date!
   updatedAt: Date!
 }
