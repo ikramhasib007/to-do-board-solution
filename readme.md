@@ -102,10 +102,17 @@ Then go the url at `http://localhost:5000`
 
 ## Shorthand
 Shorthand commands for once: navigate to the root directory in your terminal and then copy paste below command, then press enter.
+- Development environment
 ```
-cd api-engine && pnpm install && pnpm migrate && cd ../client && pnpm install && cd .. && pnpm dev
+cd api-engine && pnpm install && pnpm migrate && cd ../client && pnpm install && cd .. && pnpm install && pnpm dev
+```
+- Production build
+```
+cd api-engine && pnpm install && pnpm migrate && cd ../client && pnpm install && cd .. && pnpm install && pnpm build && pnpm start
 ```
 
-Actually, project is not completed yet. But you may check out this for exploring my coding style.
+The task completion checklist is given below:
+![checklist](<Screenshot 2024-06-04 at 4.46.56 AM.png>)
 
-Thank you :)
+
+Thank you so much for the project. I'm looking forward to hear from you.
