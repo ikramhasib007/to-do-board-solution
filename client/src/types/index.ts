@@ -7,7 +7,6 @@ export type User = {
   isDeleted: boolean;
   lastLogin: string;
   lastName: string;
-  password: string;
   tickets: Array<Ticket>;
   updatedAt: string;
 };

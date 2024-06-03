@@ -5,18 +5,20 @@ import { classNames } from '@/utils';
 interface ModalProps extends PropsWithChildren {
   open: boolean;
   onClose: () => void;
-  onAccept: () => void;
+  onAccept?: () => void;
   title?: string;
   successButtonText?: string;
   cancelButtonText?: string;
   width?: 'minimal' | 'lg';
+  footer?: boolean;
 }
 
 const Modal: FC<ModalProps> = ({
   open, onClose, onAccept, children,
   title, width = "minimal",
   successButtonText = 'Save',
-  cancelButtonText = 'Cancel'
+  cancelButtonText = 'Cancel',
+  footer = false,
 }) => {
 
   return (
@@ -44,13 +46,13 @@ const Modal: FC<ModalProps> = ({
           >
             <div className="fixed inset-0 flex w-screen items-center justify-center p-4">
               <DialogPanel className={classNames(
-                width === "lg" ? "sm:max-w-xl md:max-w-3xl lg:max-w-5xl" : "max-w-lg",
+                width === "lg" ? "min-w-112 sm:min-w-160 md:min-w-176 sm:max-w-xl md:max-w-3xl lg:max-w-5xl" : "max-w-lg",
                 "space-y-4 bg-white rounded-lg p-6 sm:p-10"
               )}>
                 {title && <DialogTitle className="text-lg font-bold">{title}</DialogTitle>}
                 {children}
 
-                <div className="mt-5 sm:flex sm:flex-row-reverse">
+                {footer && <div className="mt-5 sm:flex sm:flex-row-reverse">
                   <button
                     type="button"
                     className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-neutral-600 text-base font-medium text-white hover:bg-neutral-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-neutral-500 sm:ml-3 sm:w-auto sm:text-sm"
@@ -65,7 +67,7 @@ const Modal: FC<ModalProps> = ({
                   >
                     {cancelButtonText}
                   </button>
-                </div>
+                </div>}  
               </DialogPanel>
             </div>
           </TransitionChild>

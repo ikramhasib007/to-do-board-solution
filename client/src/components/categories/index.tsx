@@ -5,11 +5,17 @@ import Modal from '../modal'
 import { useQuery } from '@apollo/client'
 import { GET_CATEGORIES } from '@/operations/category'
 import { Category } from '@/types'
+import AddTicket from '../tickets/AddTicket'
+
+type State = {
+  isOpen: boolean;
+  category?: Category;
+}
 
 type CategoriesProps = {}
 
 const Categories: FC<CategoriesProps> = () => {
-  let [isOpen, setIsOpen] = useState(false)
+  let [state, setState] = useState<State>({ isOpen: false, category: undefined })
   const { data, loading } = useQuery(GET_CATEGORIES, {
     fetchPolicy: 'network-only'
   })
@@ -41,7 +47,7 @@ const Categories: FC<CategoriesProps> = () => {
                   <button
                     type="button"
                     className='group relative inline-flex items-center gap-2 px-4 py-2'
-                    onClick={() => setIsOpen(true)}
+                    onClick={() => setState(prevState => ({ ...prevState, isOpen: true, category }))}
                   >
                     <div className="rounded-full bg-indigo-600 p-1 text-white shadow-sm group-hover:bg-indigo-500 group-focus-visible:outline group-focus-visible:outline-2 group-focus-visible:outline-offset-2 group-focus-visible:outline-indigo-600">
                       <PlusIcon className="h-4 w-4" aria-hidden="true" />
@@ -55,15 +61,15 @@ const Categories: FC<CategoriesProps> = () => {
         ))}
       </ul>
       
-      <AddCategory />
+      {!loading && <AddCategory />}
 
       <Modal
-        open={isOpen}
-        onClose={() => setIsOpen(false)}
-        onAccept={() => setIsOpen(false)}
+        open={state.isOpen}
+        onClose={() => setState(prevState => ({ ...prevState, isOpen: false }))}
+        onAccept={() => setState(prevState => ({ ...prevState, isOpen: false }))}
         width="lg"
       >
-        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Cum ipsa qui tempora aperiam voluptatum consequuntur odio explicabo itaque eum, a doloremque maiores, aspernatur sequi! Iusto quae recusandae tempora minima voluptas.</p>
+        <AddTicket category={state.category!} />
       </Modal>
 
     </div>

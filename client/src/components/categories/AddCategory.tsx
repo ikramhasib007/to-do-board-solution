@@ -1,10 +1,11 @@
-import { FC } from 'react'
+import { FC, useState } from 'react'
 import { PlusIcon } from '@heroicons/react/20/solid'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import * as yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useMutation } from '@apollo/client'
 import { CREATE_CATEGORY, GET_CATEGORIES } from '@/operations/category'
+import { classNames } from '@/utils'
 
 const schema = yup.object().shape({
   title: yup.string().label('Title').required(),
@@ -17,6 +18,7 @@ type FormValues = {
 type AddCategoryProps = {}
 
 const AddCategory: FC<AddCategoryProps> = () => {
+  const [showInput, setShowInput] = useState<boolean>(false)
   const { register, handleSubmit, reset } = useForm<FormValues>({
     resolver: yupResolver(schema),
     defaultValues: {
@@ -46,7 +48,10 @@ const AddCategory: FC<AddCategoryProps> = () => {
           data
         }
       }).then(({ errors }) => {
-        if(!errors) reset({ title: '' }, { keepValues: false })
+        if(!errors) {
+          reset({ title: '' }, { keepValues: false })
+          setShowInput(false)
+        }
       })
       .catch((err) => console.log(err))
     }
@@ -55,10 +60,13 @@ const AddCategory: FC<AddCategoryProps> = () => {
   return (
     <div>
       <div className='rounded-lg bg-white shadow'>
-        <div className='flex flex-col w-72 space-y-4 p-4'>
+        <div className={classNames(
+          "flex flex-col w-72 p-4",
+          showInput ? "space-y-4" : ""
+        )}>
           <form onSubmit={handleSubmit(onSubmit)}>
             <input
-              type="text"
+              type={showInput ? "text" : "hidden"}
               {...register('title')}
               id="title"
               className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
@@ -68,7 +76,7 @@ const AddCategory: FC<AddCategoryProps> = () => {
           <button
             type="button"
             className='group relative inline-flex items-center gap-2'
-            onClick={() => console.log("I'm clicked!")}
+            onClick={() => setShowInput(true)}
           >
             <div className="rounded-full bg-indigo-600 p-1 text-white shadow-sm group-hover:bg-indigo-500 group-focus-visible:outline group-focus-visible:outline-2 group-focus-visible:outline-offset-2 group-focus-visible:outline-indigo-600">
               <PlusIcon className="h-4 w-4" aria-hidden="true" />
