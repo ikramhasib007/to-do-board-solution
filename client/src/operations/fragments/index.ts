@@ -30,11 +30,15 @@ export const TICKET_FIELDS = gql`
   ${CORE_TICKET_FIELDS}
   ${CORE_CATEGORY_FIELDS}
   ${CORE_LABEL_FIELDS}
+  ${CORE_USER_FIELDS}
 
   fragment TicketFields on Ticket {
     ...CoreTicketFields
     category {
       ...CoreCategoryFields
+    }
+    user {
+      ...CoreUserFields
     }
     labels {
       ...CoreLabelFields

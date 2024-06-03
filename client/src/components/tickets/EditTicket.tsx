@@ -6,10 +6,10 @@ import { classNames } from '@/utils'
 import { useForm } from 'react-hook-form'
 import * as yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup'
-import { Category, User } from '@/types'
+import { Ticket, User } from '@/types'
 import { useMutation, useQuery } from '@apollo/client'
 import { GET_USERS } from '@/operations/user'
-import { CREATE_TICKET, GET_TICKETS } from '@/operations/ticket'
+import { GET_TICKETS, UPDATE_TICKET } from '@/operations/ticket'
 import ButtonSpinner from '../spinners/ButtonSpinner'
 
 const dueDates = [
@@ -27,49 +27,56 @@ const schema = yup.object().shape({
   user: yup.object().label('User').nullable().required('Assignee is required'),
 });
 
-function initializeFormData(category: Category) {
+function initializeFormData(ticket: Ticket) {
+  const expiryDate = dueDates.find(item => {
+    return (
+      item.value?.getFullYear() === new Date(ticket.expiryDate).getFullYear() &&
+      item.value?.getMonth() === new Date(ticket.expiryDate).getMonth() &&
+      item.value?.getDate() === new Date(ticket.expiryDate).getDate()
+    )
+  })
   return {
-    title: '',
-    description: '',
-    expiryDate: '',
-    category,
-    user: '',
+    title: ticket.title,
+    description: ticket.description,
+    expiryDate: expiryDate || '',
+    category: ticket.category,
+    user: ticket.user,
   }
 }
 
-type AddTicketProps = {
-  category: Category;
+type EditTicketProps = {
+  ticket: Ticket;
   onClose: () => void;
 }
 
-const AddTicket: FC<AddTicketProps> = ({
-  category, onClose
+const EditTicket: FC<EditTicketProps> = ({
+  ticket, onClose
 }) => {
   const { data: usersData } = useQuery(GET_USERS)
 
   const { register, handleSubmit, formState: { errors }, watch, setValue, reset, clearErrors, setError } = useForm({
     resolver: yupResolver(schema),
     defaultValues: {
-      ...initializeFormData(category)
+      ...initializeFormData(ticket)
     }
   })
 
-  const [mutate, { loading }] = useMutation(CREATE_TICKET, {
-    update(cache, { data: { createTicket } }) {
+  const [mutate, { loading }] = useMutation(UPDATE_TICKET, {
+    update(cache, { data: { updateTicket } }) {
       const cacheData = cache.readQuery({
         query: GET_TICKETS,
-        variables: { categoryId: category.id }
+        variables: { categoryId: ticket.category.id }
       })
 
       cache.writeQuery({
         query: GET_TICKETS,
-        variables: { categoryId: category.id },
+        variables: { categoryId: ticket.category.id },
         data: {
-          tickets: [
-            // @ts-expect-error
-            ...cacheData?.tickets,
-            createTicket
-          ]
+          // @ts-expect-error
+          tickets: cacheData.tickets.map((item: Ticket) => {
+            if(item.id === ticket.id) return updateTicket
+            return item
+          })
         }
       })
     }
@@ -78,6 +85,7 @@ const AddTicket: FC<AddTicketProps> = ({
   const onSubmit = (data: any) => {
     if(data.user.id === 'idx') return setError('user', { message: 'Assignee is required' })
     const variables = {
+      id: ticket.id,
       data: {
         title: data.title,
         description: data.description,
@@ -88,9 +96,9 @@ const AddTicket: FC<AddTicketProps> = ({
     }
     if(!loading) {
       mutate({ variables })
-      .then(({ errors }) => {
+      .then(({ errors, data }) => {
         if(!errors) {
-          reset(initializeFormData(category), { keepValues: false })
+          reset(initializeFormData(data.updateTicket), { keepValues: false })
           onClose()
         }
       })
@@ -274,7 +282,7 @@ const AddTicket: FC<AddTicketProps> = ({
               className="relative inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
               disabled={loading}
             >
-              <ButtonSpinner loading={loading} buttonText='Create' />
+              <ButtonSpinner loading={loading} buttonText='Update' />
             </button>
           </div>
         </div>
@@ -283,4 +291,4 @@ const AddTicket: FC<AddTicketProps> = ({
   )
 }
 
-export default AddTicket
+export default EditTicket

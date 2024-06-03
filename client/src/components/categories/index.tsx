@@ -16,7 +16,7 @@ type State = {
 type CategoriesProps = {}
 
 const Categories: FC<CategoriesProps> = () => {
-  let [state, setState] = useState<State>({ isOpen: false, category: undefined })
+  const [state, setState] = useState<State>({ isOpen: false, category: undefined })
   const { data, loading } = useQuery(GET_CATEGORIES, {
     fetchPolicy: 'network-only'
   })
